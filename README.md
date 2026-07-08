@@ -1,6 +1,6 @@
 # 🚀 Multi-Source Job Scraper (JobScope)
 
-A Python-based job search application that scrapes live job listings from multiple job portals (Naukri and Foundit). Users can search jobs by role and location, view job details, and export results as a PDF.
+A Python-based job search application that scrapes live job listings from multiple job portals (Naukri and Foundit). Users can search jobs by role and location, view job details.
 
 ## ✨ Features
 
@@ -8,7 +8,6 @@ A Python-based job search application that scrapes live job listings from multip
 - Search by Job Role
 - Search by Location
 - View Company, Salary, Experience and Apply Link
-- Export results as PDF
 - Simple Streamlit UI
 
 ## 🛠️ Technologies
@@ -18,7 +17,6 @@ A Python-based job search application that scrapes live job listings from multip
 - Playwright
 - Pandas
 - BeautifulSoup
-- FPDF
 
 ## 📂 Project Structure
 
