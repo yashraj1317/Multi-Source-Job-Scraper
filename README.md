@@ -43,6 +43,17 @@ streamlit run app.py
 
 ## 📸 Screenshots
 
+### Home Page
+
+![Home Page](images/home.png)
+
+### Search Page
+
+![Search Page](images/search.png)
+
+### Results
+
+![Results](images/results.png)
 ## 👨‍💻 Author
 
 **Yashraj Sagar Shedage**
