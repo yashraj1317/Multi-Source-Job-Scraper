@@ -1,4 +1,11 @@
+import subprocess, sys
 import streamlit as st
+
+@st.cache_resource
+def install_browser():
+    subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
+
+install_browser()
 
 from scraper.naukri_scraper import scrape_naukri
 from scraper.foundit_scraper import scrape_foundit
