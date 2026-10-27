@@ -95,7 +95,11 @@ def scrape_foundit(role, location, limit=50, max_pages=6):
     loc = location.strip() if location else "india"
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=150)
+        browser = p.chromium.launch(
+    headless=True,
+    slow_mo=150,
+    args=["--no-sandbox", "--disable-dev-shm-usage"]
+)
 
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
