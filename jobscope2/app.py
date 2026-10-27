@@ -1,53 +1,58 @@
 import subprocess, sys
 import streamlit as st
 
-@st.cache_resource
+st.set_page_config(page_title="JobScope", layout="wide")
+
+
+@st.cache_resource(show_spinner=False)
 def install_browser():
     subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
+
 
 install_browser()
 
 from scraper.naukri_scraper import scrape_naukri
 from scraper.foundit_scraper import scrape_foundit
 
-st.set_page_config(page_title="JobScope", layout="wide")
-
-
-# ✅ SESSION STATE
+# SESSION STATE
 if "all_jobs" not in st.session_state:
     st.session_state.all_jobs = []
 
-
-# ✅ SIDEBAR
+# SIDEBAR
 with st.sidebar:
     st.header("Job Filters")
-
     role = st.text_input("Job Role")
     location = st.text_input("Location")
-
     search_clicked = st.button("Search")
 
-
-# ✅ MAIN UI
+# MAIN UI
 st.title("JobScope")
 st.write("Live Job Recommendation Website")
 
-
-# ✅ SEARCH LOGIC
+# SEARCH LOGIC
 if search_clicked:
     if not role:
         st.warning("Please enter a job role.")
     else:
-        with st.spinner("Scraping Naukri..."):
-            naukri_jobs = scrape_naukri(role, location, limit=50)
+        naukri_jobs, foundit_jobs = [], []
+
+        with st.spinner("Scraping Naukri (about 2-3 minutes)..."):
+            try:
+                naukri_jobs = scrape_naukri(role, location, limit=50)
+            except Exception as e:
+                st.error(f"Naukri failed: {e}")
 
         with st.spinner("Scraping Foundit..."):
-            foundit_jobs = scrape_foundit(role, location, limit=50)
+            try:
+                foundit_jobs = scrape_foundit(role, location, limit=50)
+            except Exception as e:
+                st.error(f"Foundit failed: {e}")
 
         st.session_state.all_jobs = naukri_jobs + foundit_jobs
+        if not st.session_state.all_jobs:
+            st.warning("No jobs returned. The portals may be blocking automated access.")
 
-
-# ✅ DISPLAY RESULTS
+# DISPLAY RESULTS
 all_jobs = st.session_state.all_jobs
 
 if all_jobs:
@@ -56,10 +61,8 @@ if all_jobs:
 
     st.subheader(f"Total Jobs Found: {len(all_jobs)}")
     st.write(f"Naukri: {naukri_count}  |  Foundit: {foundit_count}")
-
     st.write("---")
 
-    # ✅ JOB DISPLAY
     for job in all_jobs:
         st.markdown(f"### {job.get('title', '')}")
         st.write(f"**Company:** {job.get('company', '')}")
@@ -73,6 +76,5 @@ if all_jobs:
             st.write(f"[Apply Now]({job.get('apply_link')})")
 
         st.write("---")
-
 else:
     st.info("Enter a job role and location in the sidebar, then click Search.")
