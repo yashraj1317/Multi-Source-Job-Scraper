@@ -42,10 +42,11 @@ def scrape_naukri(role, location, limit=50, max_pages=6):
     loc_slug = slugify(location) if location else ""
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=False,
-            slow_mo=300
-        )
+       browser = p.chromium.launch(
+    headless=True,
+    slow_mo=300,
+    args=["--no-sandbox", "--disable-dev-shm-usage"]
+)
 
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
